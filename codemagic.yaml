@@ -1,0 +1,40 @@
+workflows:
+  android-build:
+    name: AppCoWeb Android build
+    instance_type: mac_mini_m2
+    max_build_duration: 45
+    environment:
+      node: 20
+      java: 17
+    scripts:
+      - name: Report start
+        script: node scripts/report.mjs job preparing 20 && node scripts/report.mjs step "Preparing workspace" running
+      - name: Install dependencies
+        script: |
+          npm install || { node scripts/report.mjs job failed 25 DEPENDENCY_INSTALL_FAILED "npm install failed"; exit 1; }
+          node scripts/report.mjs step "Preparing workspace" completed
+      - name: Generate mobile project
+        script: |
+          node scripts/report.mjs step "Generating mobile project" running
+          node scripts/prepare.mjs || { node scripts/report.mjs job failed 30 INVALID_CONFIGURATION "Invalid app configuration"; exit 1; }
+          npx cap add android && npx cap sync android
+          node scripts/report.mjs step "Generating mobile project" completed
+      - name: Build Android
+        script: |
+          node scripts/report.mjs job building 50
+          node scripts/report.mjs step "Building Android" running
+          cd android && chmod +x gradlew
+          ./gradlew assembleDebug bundleRelease || { cd ..; node scripts/report.mjs job failed 60 ANDROID_BUILD_FAILED "Gradle build failed"; exit 1; }
+          cd ..
+          node scripts/report.mjs step "Building Android" completed
+      - name: Upload artifacts
+        script: |
+          node scripts/report.mjs job verifying 85
+          node scripts/report.mjs step "Uploading artifacts" running
+          node scripts/report.mjs upload android apk android/app/build/outputs/apk/debug/app-debug.apk || { node scripts/report.mjs job failed 90 ARTIFACT_UPLOAD_FAILED "APK upload failed"; exit 1; }
+          node scripts/report.mjs upload android aab android/app/build/outputs/bundle/release/app-release.aab || true
+          node scripts/report.mjs step "Uploading artifacts" completed
+          node scripts/report.mjs job completed 100
+    artifacts:
+      - android/app/build/outputs/**/*.apk
+      - android/app/build/outputs/**/*.aab
