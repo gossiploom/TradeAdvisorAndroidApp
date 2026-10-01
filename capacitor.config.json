@@ -4,6 +4,11 @@
   "webDir": "www",
   "server": {
     "url": "https://www.tradeadvisorfx.com",
-    "cleartext": false
+    "cleartext": false,
+    "allowNavigation": [
+      "www.tradeadvisorfx.com",
+      "tradeadvisorfx.com",
+      "iyympxxzrnhkpcftoquv.supabase.co"
+    ]
   }
 }
