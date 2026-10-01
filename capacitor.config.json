@@ -1,1 +1,9 @@
-{ "appId": "com.appcoweb.placeholder", "appName": "AppCoWeb App", "webDir": "www" }
+{
+  "appId": "com.tradeadvisor.app",
+  "appName": "Trade Advisor",
+  "webDir": "www",
+  "server": {
+    "url": "https://www.tradeadvisorfx.com",
+    "cleartext": false
+  }
+}

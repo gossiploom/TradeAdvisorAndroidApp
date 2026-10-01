@@ -2,9 +2,12 @@
   "name": "appcoweb-capacitor-template",
   "private": true,
   "version": "1.0.0",
-  "scripts": { "prepare-app": "node scripts/prepare.mjs" },
+  "scripts": {
+    "prepare-app": "node scripts/prepare.mjs"
+  },
   "dependencies": {
     "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.3",
     "@capacitor/cli": "^6.1.2",
     "@capacitor/core": "^6.1.2",
     "@capacitor/splash-screen": "^6.0.2",
